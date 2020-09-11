@@ -1,0 +1,24 @@
+{% extends "layout.htm" %}
+
+{% set page = "settings" %}
+
+{% block scripts %}
+<script src="{{ static('js/settings.js') }}"></script>
+<script>
+var configText = `{{ configText|safe }}`;
+var configTextDefault = `{{ configTextDefault|safe }}`;
+</script>
+{% endblock %}
+
+{% block content %}
+<h1>Settings</h1>
+<p>Edit OLWI settings file. For syntax documentation please see <a href="https://yaml.org" target="_blank">https://yaml.org</a>.</p>
+<p>
+<br>
+<button class="button" onclick="configAccept()">Accept</button> <button class="button" onclick="configReset()">Reset</button>
+<button class="button" onclick="configDefault()">Default</button>
+</p>
+<textarea id="text-config" rows="20" cols="80">
+{{ configText }}
+</textarea>
+{% endblock %}

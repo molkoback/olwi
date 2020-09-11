@@ -1,0 +1,19 @@
+
+
+<p>
+{% if Status == 0 %}
+<span style="color:green"}>MEASURE</span>
+{% elif Status == 1 %}
+<span style="color:orange"}>DEICE</span>
+{% endif %}
+<span style="float:right">{{ DateTime }}</span>
+</p>
+
+<table style="width:100%">
+<tr><td style="width:40%">Temp. out</td><td style="width:40%" class="num">{{ TempOut }}</td><td>&deg;C</td><tr>
+<tr><td>Temp. in</td><td class="num">{{ TempIn }}</td><td>&deg;C</td><tr>
+<tr><td>Ice weight</td><td class="num">{{ Weight }}</td><td>g</td><tr>
+</table>
+<br>
+
+<p>SQL database {% if databaseOk %} <span style="color:green">online{% else %}<span style="color:red">offline{% endif %}</span></p>

@@ -1,0 +1,39 @@
+# OLWI config
+#
+
+# Sensor settings
+sensor: {
+name: "OLWI-01",
+meas_interval: 10.0,
+rotation_rpm: 10
+}
+
+# Web server
+web: {
+host: "127.0.0.1",
+port: 5000,
+url: "/"
+}
+
+# Local storage
+storage: {
+size: 100,
+temporary : True
+}
+
+# SQL database
+sql: {
+host: "127.0.0.1",
+port: 3306,
+user: "olwi",
+passwd: "",
+database: "olwi",
+table: "measurements"
+}
+
+# Hardware settings
+motor: {"dummy": {}}
+temp_relay_heater: {"dummy": {}}
+temp_sensor_out: {"dummy": {}}
+weight_sensor: {"dummy": {}}
+relay_deice: {"dummy": {}}

@@ -1,0 +1,13 @@
+{% extends "layout.htm" %}
+
+{% set page = "system" %}
+
+{% block content %}
+<h1>System</h1>
+<table>
+<tr><td style="width:4cm">Uptime</td><td style="width:5cm">{{ Uptime[0] }}:{{ Uptime[1] }}:{{ Uptime[2] }}:{{ Uptime[3] }}</td></tr>
+<tr><td>CPU load avg.</td><td>{{ CPU[0] }}, {{ CPU[1] }}, {{ CPU[2] }}</td></tr>
+<tr><td>Memory</td><td>{{ Memory["used"]}}/{{ Memory["total"] }} GiB</td></tr>
+<tr><td>Disk</td><td>{{ Disk["used"]}}/{{ Disk["total"] }} GiB</td></tr>
+</table>
+{% endblock %}

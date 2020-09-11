@@ -1,0 +1,11 @@
+{% set pages = [
+	('index', 'Home'),
+	('system', 'System'),
+	('settings', 'Settings'),
+	('help', 'Help'),
+] -%}
+<ul>
+{% for name, text in pages %}
+<li{% if name == page %} class="active"{% endif %}><a href="{{ url(name) }}">{{ text }}</a></li>
+{% endfor %}
+</ul>

@@ -1,0 +1,7 @@
+aiohttp>=3.6.2
+aiohttp-jinja2>=1.2.0
+cryptography>=3.0
+jinja2>=2.11.2
+psutil>=5.7.2
+pymysql>=0.10.0
+pyyaml>=5.3.1

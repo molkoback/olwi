@@ -1,0 +1,35 @@
+{% extends "layout.htm" %}
+
+{% set page = "about" %}
+
+{% block content %}
+<h1>Help</h1>
+
+<h2>Database Fields</h2>
+<ul>
+<li><code>ID</code>: Database entry ID.</li>
+<li><code>DateTime</code>: Date and time of the measurement.</li>
+<li><code>TempIn</code>: Temperature inside the device (&deg;C).</li>
+<li><code>TempOut</code>: Outside temperature (&deg;C).</li>
+<li><code>TempInOffset</code>, <code>TempOutOffset</code>: Used temperature offsets (&deg;C).</li>
+<li><code>Weight</code>: Ice weight (g).</li>
+<li><code>WeightRaw</code>: Raw device dependant weight value eg. voltage.</li>
+<li><code>Status</code>: Device status.
+	<ul>
+	<li><code>0</code>: MEASURE
+	<li><code>1</code>: DEICE
+	</ul>
+</li>
+<li><code>Errors</code>: Bitwise OR'd list of errors.
+	<ul>
+	<li><code>1</code>: TempIn measurement failed.
+	<li><code>2</code>: TempOut measurement failed.
+	<li><code>4</code>: Weight measurement failed.
+	</ul>
+</li>
+</ul>
+
+<h2>About</h2>
+<p>OLWI is developed in the University of Oulu.</p>
+<p>Copyright &copy; <script>document.write((new Date()).getFullYear());</script> <a href="mailto:eero.molkoselka@gmail.com">Eero Molkoselkä</a></p>
+{% endblock %}
