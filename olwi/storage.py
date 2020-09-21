@@ -63,7 +63,7 @@ class Storage:
 	def _putSQLite(self, meas):
 		meas = meas.dict()
 		keys = meas.keys()
-		values = meas.values()
+		values = tuple(meas.values())
 		
 		curs = self._conn.cursor()
 		cmd = "INSERT INTO measurements (ID, {}) VALUES (NULL,{});".format(

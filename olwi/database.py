@@ -24,7 +24,7 @@ class Database:
 		
 		cmds = [
 			"CREATE DATABASE IF NOT EXISTS {};".format(self.cfg.sql.database),
-			"CREATE TABLE IF NOT EXISTS {}.{} (ID INT UNSIGNED NOT NULL AUTO_INCREMENT, DateTime DATETIME(0) NOT NULL, TempIn FLOAT NOT NULL, TempInOffset FLOAT NOT NULL, TempOut FLOAT NOT NULL, TempOutOffset FLOAT NOT NULL, Weight FLOAT NOT NULL, WeightRaw FLOAT NOT NULL, Status TINYINT UNSIGNED NOT NULL, Errors TINYINT UNSIGNED NOT NULL, PRIMARY KEY (ID));".format(self.cfg.sql.database, self.cfg.sql.table)
+			"CREATE TABLE IF NOT EXISTS {}.{} (ID INT UNSIGNED NOT NULL AUTO_INCREMENT, DateTime DATETIME NOT NULL, TempIn FLOAT NOT NULL, TempInOffset FLOAT NOT NULL, TempOut FLOAT NOT NULL, TempOutOffset FLOAT NOT NULL, Weight FLOAT NOT NULL, WeightRaw FLOAT NOT NULL, Status TINYINT UNSIGNED NOT NULL, Errors TINYINT UNSIGNED NOT NULL, PRIMARY KEY (ID));".format(self.cfg.sql.database, self.cfg.sql.table)
 		]
 		with self._conn.cursor() as curs:
 			self._exec(curs, cmds)
