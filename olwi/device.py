@@ -44,7 +44,7 @@ class Measurement:
 		meas.Weight = dict["Weight"]
 		meas.WeightRaw = dict["WeightRaw"]
 		meas.Status = DeviceStatus(dict["Status"])
-		meas.Errors = [e for e in MeasurementError.__members__.values() if e.value|dict["Errors"]]
+		meas.Errors = [e for e in MeasurementError.__members__.values() if e.value&dict["Errors"]]
 		return meas
 	
 	def dict(self):
