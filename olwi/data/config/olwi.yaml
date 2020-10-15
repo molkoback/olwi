@@ -5,7 +5,8 @@
 sensor: {
 name: "OLWI-01",
 meas_interval: 10.0,
-rotation_rpm: 10
+rotation_rpm: 10,
+deice_time: 3600
 }
 
 # Web server

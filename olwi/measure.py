@@ -35,9 +35,10 @@ class Measure:
 				await asyncio.sleep(delta)
 			
 			meas = await self.device.read()
-			logging.info("[{}] {:.1f}°C, {:.1f}g".format(
+			logging.info("[{}] In: {:.1f}°C | Out: {:.1f}°C | Weight: {:.1f}g ({:.3f})".format(
 				meas.DateTime.strftime("%H:%M:%S"),
-				meas.TempOut, meas.Weight
+				meas.TempIn, meas.TempOut,
+				meas.Weight, meas.WeightRaw
 			))
 			
 			await self.storage.put(meas)

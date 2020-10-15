@@ -1,7 +1,7 @@
 from olwi import datadir
 from olwi.config import Config, defaultFile
 from olwi.database import Database
-from olwi.device import Device
+from olwi.device import Device, DeviceStatus
 from olwi.hw.system import readSystemParam
 from olwi.measure import Measure
 from olwi.storage import Storage
@@ -31,7 +31,7 @@ class WebController:
 	async def _resp(self, resp):
 		meas = await self.storage.read(n=1, offset=0)
 		if meas:
-			resp = {**meas[0].dict(), **resp}
+			resp["measurement"] = meas[0].dict()
 		resp["databaseOk"] = self.database is not None
 		return resp
 	
@@ -63,6 +63,14 @@ class WebController:
 	
 	async def _handle_api(self, r):
 		return await self._apiResp([meas.dict() for meas in await self.storage.read()])
+	
+	async def _handle_api_deice(self, r):
+		resp = {"error": None}
+		if await self.device.status() == DeviceStatus.DEICE:
+			resp["error"] = "Already de-icing"
+		else:
+			asyncio.get_event_loop().create_task(self.device.deice())
+		return await self._apiResp(resp)
 	
 	async def _handle_api_settings_check(self, r):
 		resp = {"error": None}
@@ -104,6 +112,7 @@ class WebController:
 			aiohttp.web.get(url+"settings", self._handle_settings, name="settings"),
 			aiohttp.web.get(url+"help", self._handle_help, name="help"),
 			aiohttp.web.get(url+"api", self._handle_api, name="api"),
+			aiohttp.web.post(url+"api/deice", self._handle_api_deice, name="api-deice"),
 			aiohttp.web.post(url+"api/settings/check", self._handle_api_settings_check, name="api-settings-check"),
 			aiohttp.web.post(url+"api/settings/set", self._handle_api_settings_set, name="api-settings-set")
 		])

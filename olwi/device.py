@@ -8,6 +8,7 @@ import asyncio
 from datetime import datetime
 import enum
 import logging
+import time
 
 class DeviceException(Exception):
 	pass
@@ -73,6 +74,7 @@ class Device:
 		self.weightSensor = createWeightSensor(self.cfg.weightSensor.name, **self.cfg.weightSensor.kwargs)
 		self.relayDeice = createRelay(self.cfg.relayDeice.name, **self.cfg.relayDeice.kwargs)
 		
+		self._lock = asyncio.Lock()
 		self._status = DeviceStatus.MEASURE
 	
 	async def start(self):
@@ -84,15 +86,20 @@ class Device:
 		await self.weightSensor.stop()
 		await self.motor.stop()
 	
+	async def status(self):
+		async with self._lock:
+			return self._status
+	
 	async def read(self):
-		meas = Measurement()
-		meas.Status = self._status
-		res = await asyncio.gather(
-			self.tempRelayHeater.temp(),
-			self.tempSensorOut.temp(),
-			self.weightSensor.weight(),
-			return_exceptions=True
-		)
+		async with self._lock:
+			meas = Measurement()
+			meas.Status = self._status
+			res = await asyncio.gather(
+				self.tempRelayHeater.temp(),
+				self.tempSensorOut.temp(),
+				self.weightSensor.weight(),
+				return_exceptions=True
+			)
 		if isinstance(res[0], Exception):
 			meas.Errors.append(MeasurementError.TEMPIN)
 		else:
@@ -114,3 +121,18 @@ class Device:
 		else:
 			logging.debug("Measurement successful")
 		return meas
+	
+	async def deice(self):
+		async with self._lock:
+			if self._status == DeviceStatus.DEICE:
+				return
+			self._status = DeviceStatus.DEICE
+			await self.tempRelayHeater.disable()
+			await self.relayDeice.on()
+		
+		await asyncio.sleep(self.cfg.sensor.deiceTime)
+		
+		async with self._lock:
+			await self.relayDeice.off()
+			await self.tempRelayHeater.enable()
+			self._status = DeviceStatus.MEASURE

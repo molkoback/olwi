@@ -1,19 +1,22 @@
-
-
+{% if measurement %}
 <p>
-{% if Status == 0 %}
+{% if measurement.Status == 0 %}
 <span style="color:green"}>MEASURE</span>
-{% elif Status == 1 %}
+{% elif measurement.Status == 1 %}
 <span style="color:orange"}>DEICE</span>
 {% endif %}
-<span style="float:right">{{ DateTime }}</span>
+<span style="float:right">{{ measurement.DateTime }}</span>
 </p>
 
 <table style="width:100%">
-<tr><td style="width:40%">Temp. out</td><td style="width:40%" class="num">{{ TempOut }}</td><td>&deg;C</td><tr>
-<tr><td>Temp. in</td><td class="num">{{ TempIn }}</td><td>&deg;C</td><tr>
-<tr><td>Ice weight</td><td class="num">{{ Weight }}</td><td>g</td><tr>
+<tr><td style="width:40%">Temp. out</td><td style="width:40%" class="num">{{ "{:.1f}".format(measurement.TempOut) }}</td><td>&deg;C</td><tr>
+<tr><td>Temp. in</td><td class="num">{{ "{:.1f}".format(measurement.TempIn) }}</td><td>&deg;C</td><tr>
+<tr><td>Ice weight</td><td class="num">{{ "{:.1f}".format(measurement.Weight) }}</td><td>g</td><tr>
+<tr><td>Weight signal</td><td class="num">{{ "{:.3f}".format(measurement.WeightRaw) }}</td><td></td><tr>
 </table>
 <br>
+{% endif %}
 
 <p>SQL database {% if databaseOk %} <span style="color:green">online{% else %}<span style="color:red">offline{% endif %}</span></p>
+
+<p><button class="button" onclick="deice()">De-ice</button></p>

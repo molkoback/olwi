@@ -50,6 +50,7 @@ class Config:
 			"name": dict["sensor"]["name"],
 			"measInterval": float(dict["sensor"]["meas_interval"]),
 			"rotRPM": float(dict["sensor"]["rotation_rpm"]),
+			"deiceTime": float(dict["sensor"]["deice_time"])
 		})
 		self.web = type("WebServerParam", (object,), {
 			"host": dict["web"]["host"],
