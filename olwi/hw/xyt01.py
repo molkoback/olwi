@@ -6,10 +6,9 @@ import asyncio
 import time
 
 class XYT01(TempRelay):
-	def __init__(self, port="/dev/serial0", offset=0.0, thresh=5.0, hyst=1.0):
+	def __init__(self, port="/dev/serial0", offset=0.0, hyst=1.0):
 		self.port = port
 		self.offset = offset
-		self.thresh = thresh
 		self.hyst = hyst
 		
 		self._loop = asyncio.get_event_loop()
@@ -66,15 +65,15 @@ class XYT01(TempRelay):
 			await self._aread()
 		await self._write("start")
 	
-	async def enable(self):
-		if self.thresh >= -50.0 and self.thresh < 0.0:
-			lineThresh = "S:{:03d}".format(int(self.thresh))
-		elif self.thresh < 100.0:
-			lineThresh = "S:{:04.1f}".format(self.thresh)
-		elif self.thresh < 110.0:
-			lineThresh = "S:{}".format(int(self.thresh))
+	async def enable(self, thresh):
+		if thresh >= -50.0 and thresh < 0.0:
+			lineThresh = "S:{:03d}".format(int(thresh))
+		elif thresh < 100.0:
+			lineThresh = "S:{:04.1f}".format(thresh)
+		elif thresh < 110.0:
+			lineThresh = "S:{}".format(int(thresh))
 		else:
-			raise TempRelayException("Value out of range: {}".format(self.thresh))
+			raise TempRelayException("Value out of range: {}".format(thresh))
 		
 		if self.hyst >= 0.0 and self.hyst <= 30.0:
 			lineHyst = "B:{:04.1f}".format(self.hyst)

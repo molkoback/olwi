@@ -76,10 +76,11 @@ class Device:
 		
 		self._lock = asyncio.Lock()
 		self._status = DeviceStatus.MEASURE
+		self._dir = True
 	
 	async def start(self):
-		await self.tempRelayHeater.enable()
-		await self.motor.run(self.cfg.sensor.rotRPM)
+		await self.tempRelayHeater.enable(self.cfg.sensor.temp.meas)
+		await self.motor.run(self.cfg.sensor.rotRPM, dir=self._dir)
 		await self.weightSensor.start()
 	
 	async def stop(self):
@@ -92,6 +93,8 @@ class Device:
 	
 	async def read(self):
 		async with self._lock:
+			await self.motor.stop()
+			
 			meas = Measurement()
 			meas.Status = self._status
 			res = await asyncio.gather(
@@ -100,6 +103,10 @@ class Device:
 				self.weightSensor.weight(),
 				return_exceptions=True
 			)
+			
+			self._dir = not self._dir
+			await self.motor.run(self.cfg.sensor.rotRPM, dir=self._dir)
+			
 		if isinstance(res[0], Exception):
 			meas.Errors.append(MeasurementError.TEMPIN)
 		else:
@@ -127,12 +134,16 @@ class Device:
 			if self._status == DeviceStatus.DEICE:
 				return
 			self._status = DeviceStatus.DEICE
-			await self.tempRelayHeater.disable()
-			await self.relayDeice.on()
+			logging.info("Status: DEICE")
 		
-		await asyncio.sleep(self.cfg.sensor.deiceTime)
+		await self.tempRelayHeater.enable(self.cfg.sensor.temp.deice)
+		await asyncio.sleep(self.cfg.sensor.deiceTime[0])
+		
+		await self.relayDeice.on()
+		await asyncio.sleep(self.cfg.sensor.deiceTime[1])
 		
 		async with self._lock:
 			await self.relayDeice.off()
-			await self.tempRelayHeater.enable()
+			await self.tempRelayHeater.enable(self.cfg.sensor.temp.meas)
 			self._status = DeviceStatus.MEASURE
+			logging.info("Status: MEASURE")

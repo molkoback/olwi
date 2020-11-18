@@ -4,7 +4,7 @@ class TempRelayException(Exception):
 	pass
 
 class TempRelay(TempSensor):
-	async def enable(self) -> None:
+	async def enable(self, thresh: float) -> None:
 		raise NotImplementedError()
 	
 	async def disable(self) -> None:
@@ -14,7 +14,7 @@ class DummyTempRelay(TempRelay):
 	async def temp(self):
 		return 20.0, 0.0
 	
-	async def enable(self):
+	async def enable(self, thresh):
 		pass
 	
 	async def disable(self):
