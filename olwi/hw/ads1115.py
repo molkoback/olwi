@@ -79,5 +79,7 @@ class ADS1115(WeightSensor):
 		if avg:
 			async with self._lock:
 				if self._n > 0:
-					return self._sums[0]/self._n, self._sums[1]/self._n
+					ret = self._sums[0]/self._n, self._sums[1]/self._n
+					self._resetMeas()
+					return ret
 		return self._read()
