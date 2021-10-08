@@ -5,7 +5,9 @@
 sensor: {
 name: "OLWI-01",
 meas_interval: 10.0,
-rotation_rpm: 10,
+rotation_dir: true,
+rotation_rpm: 4,
+temp: {meas: 10.0, deice: 30.0},
 deice_time: 3600
 }
 
