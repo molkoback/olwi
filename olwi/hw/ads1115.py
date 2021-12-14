@@ -25,16 +25,20 @@ class ADS1115(WeightSensor):
 		self._stop.clear()
 		self._stopped.clear()
 		await self.reset()
+		
+		t_next = time.time()
 		while not self._stop.is_set():
-			start = time.time()
 			async with self._lock:
 				V = self.chan.voltage
-				now = time.time()
-				self._values = [(V, t) for V, t in self._values if now-t <= self.avg]
-				self._values.append((V, now))
-			delta = self.delay - (time.time() - start)
+				t_now = time.time()
+				self._values = [(V, t) for V, t in self._values if t_now-t <= self.avg]
+				self._values.append((V, t_now))
+			
+			t_next += self.delay
+			delta = t_next - time.time()
 			if delta > 0:
 				await asyncio.sleep(delta)
+		
 		await self.reset()
 		self._stopped.set()
 	
