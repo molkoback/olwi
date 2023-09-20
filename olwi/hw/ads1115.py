@@ -9,7 +9,8 @@ import asyncio
 import time
 
 class ADS1115(WeightSensor):
-	def __init__(self, delay=0.250, avg=60):
+	def __init__(self, params=(1.0, 0.0), delay=0.250, avg=60):
+		self.params = params
 		self.delay = delay
 		self.avg = avg
 		
@@ -53,8 +54,7 @@ class ADS1115(WeightSensor):
 		self._values = []
 	
 	def _convert(self, V):
-		# TODO
-		return 0.0
+		return (V - self.params[1]) / self.params[0]
 	
 	async def weight(self):
 		async with self._lock:

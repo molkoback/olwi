@@ -41,6 +41,9 @@ class Measure:
 				meas.Weight, meas.WeightRaw
 			))
 			
+			if meas.Weight >= self.cfg.sensor.maxWeight:
+				asyncio.get_event_loop().create_task(self.device.deice())
+			
 			await self.storage.put(meas)
 			if self.database is not None:
 				await self.database.insert(meas)

@@ -8,7 +8,8 @@ meas_interval: 10.0,
 rotation_dir: true,
 rotation_rpm: 4,
 temp: {meas: 10.0, deice: 30.0},
-deice_time: 3600
+deice_time: 3600,
+max_weight: 500
 }
 
 # Web server

@@ -55,7 +55,8 @@ class Config:
 				"meas": float(dict["sensor"]["temp"]["meas"]),
 				"deice": float(dict["sensor"]["temp"]["deice"])
 			}),
-			"deiceTime": float(dict["sensor"]["deice_time"])
+			"deiceTime": float(dict["sensor"]["deice_time"]),
+			"maxWeight": float(dict["sensor"]["max_weight"])
 		})
 		self.web = type("WebServerParam", (object,), {
 			"host": dict["web"]["host"],
