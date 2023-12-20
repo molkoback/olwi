@@ -6,6 +6,7 @@ import board
 import busio
 
 import asyncio
+from collections import deque
 import time
 
 class ADS1115(WeightSensor):
@@ -32,8 +33,9 @@ class ADS1115(WeightSensor):
 			async with self._lock:
 				V = self.chan.voltage
 				t_now = time.time()
-				self._values = [(V, t) for V, t in self._values if t_now-t <= self.avg]
 				self._values.append((V, t_now))
+				while t_now - self._values[0][1] > self.avg:
+					self._values.popleft()
 			
 			t_next += self.delay
 			delta = t_next - time.time()
@@ -51,7 +53,7 @@ class ADS1115(WeightSensor):
 		await self._stopped.wait()
 	
 	async def reset(self):
-		self._values = []
+		self._values = deque()
 	
 	def _convert(self, V):
 		return (V - self.params[1]) / self.params[0]
